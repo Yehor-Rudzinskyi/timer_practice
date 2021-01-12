@@ -13,7 +13,7 @@
 // Cоответственно, выбираем через селектор нашу нотификашечку и вешаем на неё слушатель клика.
 
 const notificationRef = document.querySelector('.js-notification');
-
+ 
 let timerId = null;
 
 notificationRef.addEventListener('click', onNotificationClick)
