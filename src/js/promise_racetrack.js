@@ -36,3 +36,11 @@ Promise.all(promises).then(result => console.log(result))
 Promise.race(promises).then(result => console.log(result))
 
 // Также получает массив промисов и вотличии от метода all, ловит самый быстро выполняющийся промис и возвращает его
+
+const some = function (ase) {
+    console.log(ase);
+}
+some.else = function (some) {
+    console.log(some);
+}
+console.dir(some);

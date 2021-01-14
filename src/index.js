@@ -5,4 +5,5 @@ import './styles.css';
 // import './js/notification';
 // import './js/intro_promise';
 // import './js/promise';
- import './js/promise_racetrack';
+//  import './js/promise_racetrack';
+import './js/fetch_get';
