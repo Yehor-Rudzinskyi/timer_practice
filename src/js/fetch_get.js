@@ -1,9 +1,4 @@
-import articlesTpl from '../articles.hbs'
 
-const refs = {
-    articlesConteiner: document.querySelector('.js-articles'),
-    searchForm : document.querySelector('.js-serch-form'),
-}
 // fetch('http://hn.algolia.com/api/v1/search?query=...')
 
 
@@ -46,29 +41,131 @@ const refs = {
 // В прилетевшем объекте наблюдаем свойство articles - оно то нам и необходимо) Обращаемся ук нему через data.articles
 // В приватных API бум юзать заголовок авторизации в виде Authorization, который передаётся в заголовок. 
 // Мы делаем опции для феча: и передаём их ему параметром
-const options = {
-    headers: {
-        Authorization: apiKey,
-    },
-};
+// const options = {
+//     headers: {
+//         Authorization: apiKey,
+//     },
+// };
 
 // Теперь "нарисуем наш массив" в articles.hbs
 // Подтягиваем шаблон в этот файл
+import articlesTpl from '../articles.hbs'
 
-const apiKey = '7937007a8532475090180c9396df4d40';
-const url = `http://newsapi.org/v2/everything?q=bitcoin&language=ru&apiKey=${apiKey}`;
-fetch(url, options)
-    .then(res => res.json()).then(({ articles }) => {
-        console.log(articles)
-        const markup = articlesTpl(articles)
-        refs.articlesConteiner.insertAdjacentHTML('beforeend', markup)
-    });
+const refs = {
+    articlesConteiner: document.querySelector('.js-articles'),
+    searchForm : document.querySelector('.js-serch-form'),
+}
+
+// const apiKey = '7937007a8532475090180c9396df4d40';
+// const url = `http://newsapi.org/v2/everything?q=bitcoin&language=ru&apiKey=${apiKey}`;
+
+// fetch(url, options)
+//     .then(res => res.json()).then(({ articles }) => {
+//         console.log(articles)
+//         const markup = articlesTpl(articles)
+//         refs.articlesConteiner.insertAdjacentHTML('beforeend', markup)
+//     });
     
     // Тут вызываем наш импорт с шаблона передавая ему в параметры наш полученный массив articles, и вешаем теперь в HTML на тег ul class='js-articles';
 
     // Теперь забабахаем, чтоб по поиску в инпут оно подтягивало нам новые ссылки. Вешаем сабмит на форму
 
+// refs.searchForm.addEventListener('submit', event => {
+//     event.preventDefault()
+//     const form = event.currentTarget;
+//     const inputValue = form.elements.query.value
+//     // console.log(event.currentTarget.elements.query.value);
+//     console.log(inputValue);
+//     })
+
+// event.currentTarget - это непосредственно наша форма  <form class="serch-form js-serch-form">, а в event.currentTarget.elements есть возможность выбрать input, по тегу "name"
+// event.currentTarget.elements.query и от сюда выходим на его знач. value,то что мы набираем в input.
+// Ну и всё (запрос), должно происходить в слушателе события: и условия поиска в Бэке меняем на наш input - ?q=bitcoin меняем на ${inputValue}.
+// А чтобы даные не полюсовались, а подменялись - нам необходимо перед запросом данных поставить обнуление строки (разметки) - innerHTML = '' либо Шаблон рисовать через innerHTML = `${markup}`!
+
+// refs.searchForm.addEventListener('submit', event => {
+//     event.preventDefault()
+//     const form = event.currentTarget;
+//     const inputValue = form.elements.query.value
+
+// const apiKey = '7937007a8532475090180c9396df4d40';
+// const url = `http://newsapi.org/v2/everything?q=${inputValue}&language=ru&apiKey=${apiKey}`;
+
+// const options = {
+//     headers: {
+//         Authorization: apiKey,
+//     },
+// };
+    
+// fetch(url, options)
+//     .then(res => res.json()).then(({ articles }) => {
+//         console.log(articles)
+//         const markup = articlesTpl(articles)
+//         refs.articlesConteiner.insertAdjacentHTML('beforeend', markup)
+//     });
+
+// })
+    
+
+// xxxxxxx РЕФАКТОРИМ хххххххх
+
+
+// дЕЛАЕМ ДЛЯ FECH функцию и Шаблон рисовать через innerHTML = `${markup}`
+
+
+// refs.searchForm.addEventListener('submit', event => {
+//     event.preventDefault()
+//     const form = event.currentTarget;
+//     const inputValue = form.elements.query.value
+// fechArticle(inputValue)
+// })
+
+// function fechArticle(searchQuery) {
+
+//     const options = {
+//     headers: {
+//         Authorization: apiKey,
+//     },
+// };
+// const apiKey = '7937007a8532475090180c9396df4d40';
+// const url = `http://newsapi.org/v2/everything?q=${searchQuery}&language=ru&apiKey=${apiKey}`;
+    
+// fetch(url, options)
+//     .then(res => res.json()).then(({ articles }) => {
+//         console.log(articles)
+//         const markup = articlesTpl(articles)
+//         refs.articlesConteiner.innerHTML = `${markup}`;
+//     });
+// }
+
+// Чудесно! НО сейчас функция fechArticle(searchQuery) выполняет дофигища инструкций! Она и "рисует" и выполняет запросы.. Поэтому рисование выносим в отдельную функцию!
+
 refs.searchForm.addEventListener('submit', event => {
     event.preventDefault()
-    console.log(event.currentTarget);
-    })
+    const form = event.currentTarget;
+    const inputValue = form.elements.query.value
+fechArticle(inputValue)
+})
+
+function fechArticle(searchQuery) {
+
+    const options = {
+    headers: {
+        Authorization: apiKey,
+    },
+};
+const apiKey = '7937007a8532475090180c9396df4d40';
+const url = `http://newsapi.org/v2/everything?q=${searchQuery}&language=ru&apiKey=${apiKey}`;
+    
+fetch(url, options).then(res => res.json()).then(({ articles }) => updateArticlesMarkup(articles));
+};
+
+function updateArticlesMarkup(articles) {
+            const markup = articlesTpl(articles)
+        refs.articlesConteiner.innerHTML = `${markup}`;
+};
+
+// Но и сейчас мы не можем так оставить функцию fechArticle(searchQuery), ведь она просто должна сделать запрос и вернуть данные без всяких переменых c функциями в this. Ведь беря функцию из другого модуля (файла js) - она не будет знать про эту переменную! Поэто му отправляем её в отдельный модуль, как и создание разметки. А в отдельном модуле находятся связующие.. вешается слушатель и вызываются эти функции.
+// Выносим работу с API в отдельный модуль http_request.js
+// Выносим работу разметкой в отдельный модуль create_markup.js
+// Выносим работу слушателя в основной модуль fetch_main.js
