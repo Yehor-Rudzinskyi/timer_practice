@@ -1,4 +1,7 @@
 {{!-- Для каждого элемента массива --}}
 {{#each this}}
-<li><a href="{{url}}" target="blank_" rel="noopener noreferrer">{{title}}</a></li>
+<li>
+    <img src="{{urlToImage}}" alt="" width="250px">
+    <h2><a href="{{url}}" target="blank_" rel="noopener noreferrer">{{title}}</a></h2>
+</li>
 {{/each}}
