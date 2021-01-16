@@ -1,7 +1,7 @@
 const apiKey = '7937007a8532475090180c9396df4d40';
 
-function fechArticle(searchQuery) {
-    const url = `http://newsapi.org/v2/everything?q=${searchQuery}&language=ru`;
+function fechArticle(searchQuery, page = 1) {
+    const url = `http://newsapi.org/v2/everything?q=${searchQuery}&pageSize=10&$page=${page}`;
 
     const options = {
     headers: {

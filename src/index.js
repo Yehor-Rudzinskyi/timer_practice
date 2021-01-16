@@ -7,4 +7,4 @@ import './styles.css';
 // import './js/promise';
 //  import './js/promise_racetrack';
 // import './js/fetch_get';
-import './fetch/fetch_main';
+import './fetch_2.1/fetch_main2';
